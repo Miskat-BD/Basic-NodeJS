@@ -1,8 +1,9 @@
 import type { IncomingMessage, ServerResponse } from "http";
 import { productService } from "../service/product.service";
 import type { IProducts } from "../types/products";
+import { bodyParser } from "../utils/parseBody";
 
-const productController = (req: IncomingMessage, res: ServerResponse) => {
+const productController = async (req: IncomingMessage, res: ServerResponse) => {
     const url = req.url
     const method = req.method
     const urlParams = url?.split("/")
@@ -25,6 +26,14 @@ const productController = (req: IncomingMessage, res: ServerResponse) => {
         res.end(JSON.stringify({
             message: `Product ${id} is retrived successfully`,
             data: product
+        }))
+    }
+    else if (url === "/products" && method === "POST"){
+        const body = await bodyParser(req)
+        // console.log(body)
+        res.writeHead(201, {"content-type":"application/json"})
+        res.end(JSON.stringify({message: "Product created successfully",
+            data: body
         }))
     }
 }
