@@ -13,5 +13,15 @@
         "id": 3,
         "name": "Tablet",
         "price": 40
+    },
+    {
+        "id": 1794840539856,
+        "name ": "product2",
+        "price": 22
+    },
+    {
+        "id": 1794840566638,
+        "name ": "product3",
+        "price": 23
     }
 ]

@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "http";
-import { productService } from "../service/product.service";
+import { createProduct, productService } from "../service/product.service";
 import type { IProducts } from "../types/products";
 import { bodyParser } from "../utils/parseBody";
 
@@ -31,9 +31,17 @@ const productController = async (req: IncomingMessage, res: ServerResponse) => {
     else if (url === "/products" && method === "POST"){
         const body = await bodyParser(req)
         // console.log(body)
+        const newProduct = {
+            id : Date.now(),
+            ...body
+        }
+        const products = productService()
+        products.push(newProduct)
+        createProduct(products)
+        // console.log(newProduct)
         res.writeHead(201, {"content-type":"application/json"})
         res.end(JSON.stringify({message: "Product created successfully",
-            data: body
+            data: newProduct
         }))
     }
 }
