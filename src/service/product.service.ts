@@ -1,5 +1,5 @@
 import fs from "fs";
-import path from "node:path";
+import path from "path";
 
 const filePath = path.join(process.cwd(), "./src/database/db.json")
 
