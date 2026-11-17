@@ -18,31 +18,48 @@ const productController = async (req: IncomingMessage, res: ServerResponse) => {
             message: "Products retirved Successfully!",
             data: products
         }))
-    } 
+    }
     else if (method === "GET" && id !== null) {
         const products = productService()
-        const product = products.find((p: IProducts)=> p.id === id)
+        const product = products.find((p: IProducts) => p.id === id)
         res.writeHead(200, { "content-type": "application/json" })
         res.end(JSON.stringify({
             message: `Product ${id} is retrived successfully`,
             data: product
         }))
     }
-    else if (url === "/products" && method === "POST"){
+    else if (url === "/products" && method === "POST") {
         const body = await bodyParser(req)
         // console.log(body)
         const newProduct = {
-            id : Date.now(),
+            id: Date.now(),
             ...body
         }
         const products = productService()
         products.push(newProduct)
         createProduct(products)
         // console.log(newProduct)
-        res.writeHead(201, {"content-type":"application/json"})
-        res.end(JSON.stringify({message: "Product created successfully",
+        res.writeHead(201, { "content-type": "application/json" })
+        res.end(JSON.stringify({
+            message: "Product created successfully",
             data: newProduct
         }))
+    } else if (method === 'PUT' && id !== null) {
+        const body = await bodyParser(req)
+        const products = productService()
+        const index = products.findIndex((p: IProducts) => p.id === id)
+        // console.log(index)
+        if (index < 0) {
+            res.writeHead(404, { "content-type": "application/json" })
+            res.end(JSON.stringify({ message: "Product Not Found!" }))
+        }
+
+        // console.log(products[index])
+        products[index] = {id: products[index].id, ...body}
+        createProduct(products)
+
+        res.writeHead(201, { "content-type": "application/json" })
+        res.end(JSON.stringify({ message: "Product update successfully", data: products[index] }))
     }
 }
 
